@@ -21,14 +21,14 @@ const Pricing = () => (
                     <div className="grid grid--3 rates">
                         {rates.map((rate) => (
                             <article
-                                className={`card rate ${rate.featured ? "featured" : ""}`}
+                                className={`card rate rate--${rate.id} ${rate.featured ? "featured" : ""}`}
                                 key={rate.id}
                             >
                                 {rate.featured}
                                 <h2>{rate.name}</h2>
                                 <p className="price">
                                     <strong>{rate.price}</strong>
-                                    <h2 className="unit">{rate.unit}</h2>
+                                    <span className="unit">{rate.unit}</span>
                                 </p>
                                 <p className="summary">{rate.summary}</p>
                                 <ul className="checklist">
@@ -87,6 +87,13 @@ const Pricing = () => (
                 border-color: var(--primary);
                 box-shadow: var(--shadow-lift);
             }
+            /* Below ~667px two 290px-min columns no longer fit (.grid--3),
+               so the cards stack. Lead with First Visit there. */
+            @media (max-width: 666px) {
+                .rate--first {
+                    order: -1;
+                }
+            }
             .badge {
                 position: absolute;
                 top: -16px;
@@ -114,9 +121,14 @@ const Pricing = () => (
                 color: var(--primary-strong);
                 line-height: 1;
             }
+            /* Heading-sized, but a span: an <h2> inside the price <p> is
+               invalid HTML and breaks hydration. */
             .unit {
                 color: var(--ink-muted);
-                font-size: 1.05rem;
+                font-size: clamp(1.3rem, 2.4vw, 1.55rem);
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                line-height: 1.15;
             }
             .summary {
                 margin-bottom: 1.4em;
